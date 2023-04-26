@@ -44,7 +44,6 @@ const getRand = (() => {
 })()
 
 export const createRoom = async () => {
-  console.log('creating a room!!')
   const roomId = getRand(6).toUpperCase()
   const cryptedRoomId = CryptoJS.SHA512(roomId).toString(CryptoJS.enc.Hex)
 

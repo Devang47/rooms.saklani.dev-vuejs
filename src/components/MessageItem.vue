@@ -39,7 +39,7 @@ const copyText = () => {
     <button
       aria-label="copy text"
       :class="{ done }"
-      :click="copyText"
+      @click="copyText()"
       title="copy text"
       class="copy-btn"
     >

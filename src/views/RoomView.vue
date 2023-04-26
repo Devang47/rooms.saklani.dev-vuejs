@@ -11,10 +11,10 @@ import ChatHeader from '@/components/ChatHeader.vue'
 import { addNotification } from '@/utils/notifications'
 import { addMessage, checkIfRoomExists, deleteRoom, getRoomMessages } from '@/utils/Room'
 import { uploadFile } from '@/utils/storage'
-import { nextTick, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import router from '@/router'
 
-const { setLoadingValue } = useLoadingStore()
+const loadingStore = useLoadingStore()
 const messagesStore = useMessagesStore()
 
 let roomId = ref<string>('')
@@ -29,17 +29,14 @@ const route = useRoute()
 onMounted(async () => {
   roomId.value = (route.params.id as string).toUpperCase()
 
-  console.log({ uploadFileInput: uploadFileInput.value })
-
   roomStore.setRoomData(await checkIfRoomExists(roomId.value as string))
-  console.log(roomStore.roomData)
   if (!roomStore.roomData) {
     messagesStore.setRoomMessages([])
     addNotification("Room doesn't exists", true)
     router.push('/')
   } else {
     await getRoomMessages(roomId.value, scrollToBottom)
-    setLoadingValue(false)
+    loadingStore.setLoadingValue(false)
   }
 
   chatInputBox.value?.addEventListener('keypress', (e) => {
@@ -74,7 +71,6 @@ const handleAddMsg = async () => {
   if (!chatInput.value) return
 
   let msg = chatInput.value
-  console.log(msg, roomId.value)
   chatInput.value = ''
   await addMessage({ roomId: roomId.value, message: msg })
   scrollToBottom()
@@ -85,20 +81,20 @@ const handleAddMsg = async () => {
 
 const handleInputChange = async (e: any) => {
   if (e?.target?.files.length > 0) {
-    setLoadingValue(true)
+    loadingStore.setLoadingValue(true)
     try {
       let url: string = await uploadFile(roomId.value, e.target.files[0])
 
       if (chatInput.value.trim()) return (chatInput.value += ' ' + url)
       chatInput.value += url
     } catch (error) {
-      console.log(error)
+      console.log({ error })
     }
   }
 }
 
 const handleDeleteRoom = async () => {
-  setLoadingValue(true)
+  loadingStore.setLoadingValue(true)
   await deleteRoom(roomId.value)
   messagesStore.setRoomMessages([])
   router.push('/')
@@ -143,9 +139,13 @@ const scrollToBottom = () => {
               </table>
             </div>
           </div>
-          <div v-else v-for="item in messagesStore.roomMessages" :key="item">
-            <Message :room-id="roomId" :message-data="item" />
-          </div>
+          <Message
+            v-else
+            v-for="item in messagesStore.roomMessages"
+            :key="item"
+            :room-id="roomId"
+            :message-data="item"
+          />
 
           <div class="scroll-bottom" ref="scrollToElement" />
         </div>
@@ -183,7 +183,7 @@ const scrollToBottom = () => {
                 class="hidden"
                 name="fileinput"
                 id="fileinput"
-                :change="handleInputChange"
+                @change="(e) => handleInputChange(e)"
               />
             </button>
           </div>

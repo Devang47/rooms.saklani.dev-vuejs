@@ -10,8 +10,8 @@ const props = defineProps({
   handleDeleteRoom: Function
 })
 
-const store = useMessagesStore()
-const { roomData } = useRoomStore()
+const messagesStore = useMessagesStore()
+const roomStore = useRoomStore()
 
 const copyText = () => {
   navigator.clipboard.writeText(props.roomId || '')
@@ -47,8 +47,8 @@ function startTimer(duration: number) {
   }, 1000)
 }
 
-let time = computed(() => {
-  let res = 15 * 60000 - (new Date().getTime() - roomData.timestamp)
+const time = computed(() => {
+  let res = 15 * 60000 - (new Date().getTime() - roomStore.roomData?.timestamp)
   startTimer(res / 1000)
   return res
 })
@@ -60,7 +60,7 @@ onUnmounted(() => {
 
 <template>
   <header>
-    <a href="/" @click="store.setRoomMessages([])">
+    <a href="/" @click="messagesStore.setRoomMessages([])">
       <h1 role="link" class="sans cursor-pointer">ChatRooms</h1>
     </a>
     <div class="flex items-center gap-5">

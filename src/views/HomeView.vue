@@ -15,7 +15,7 @@ import FloatingImages from '@/components/FloatingImages.vue'
 let loading = ref<boolean>(true)
 let formLoading = ref<'true' | 'false' | 'complete'>('false')
 
-const { setLoadingValue } = useLoadingStore()
+const loadingStore = useLoadingStore()
 
 const transitionJoinPageStart = (callback: () => void) => {
   gsap
@@ -34,7 +34,7 @@ const handleCreateRoom = async () => {
 
   transitionJoinPageStart(() => {
     setTimeout(() => {
-      setLoadingValue(true)
+      loadingStore.setLoadingValue(true)
       router.push(`/room/${roomId}`)
     }, 100)
   })

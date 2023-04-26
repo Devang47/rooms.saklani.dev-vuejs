@@ -7,7 +7,7 @@ import CryptoJS from 'crypto-js'
 export const uploadFile = (roomId: string, file: any): Promise<string> =>
   new Promise((resolve, reject) => {
     const cryptedKey = CryptoJS.SHA512(roomId).toString(CryptoJS.enc.Hex)
-    const { setLoadingValue } = useLoadingStore()
+    const loadingStore = useLoadingStore()
 
     const storage = getStorage(app)
     const storageRef = ref(
@@ -21,20 +21,20 @@ export const uploadFile = (roomId: string, file: any): Promise<string> =>
       (snapshot) => {
         if (snapshot.totalBytes > 204857600) {
           uploadTask.cancel()
-          setLoadingValue(false)
+          loadingStore.setLoadingValue(false)
 
           addNotification('File size exceeds 20mb limit!', true)
           return
         }
       },
       (error) => {
-        setLoadingValue(false)
+        loadingStore.setLoadingValue(false)
         addNotification('Error while uploading file!', true)
         reject(error)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (e: string) => {
-          setLoadingValue(false)
+          loadingStore.setLoadingValue(false)
           resolve(e)
         })
       }

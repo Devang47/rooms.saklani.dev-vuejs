@@ -13,7 +13,7 @@ import CircleAnimation from '@/components/CircleAnimation.vue'
 import ArrowRightIcon from '@/components/icons/ArrowRightIcon.vue'
 import CurvedArrowLineIcon from '@/components/icons/CurvedArrowLineIcon.vue'
 
-const { setLoadingValue } = useLoadingStore()
+const loadingStore = useLoadingStore()
 
 let inputVal = ref('')
 let formLoading = ref('false')
@@ -55,7 +55,7 @@ const joinRoom = async () => {
 }
 
 onMounted(() => {
-  setLoadingValue(false)
+  loadingStore.setLoadingValue(false)
 
   const tl = gsap.timeline({})
 

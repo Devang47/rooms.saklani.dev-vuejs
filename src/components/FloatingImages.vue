@@ -2,11 +2,7 @@
 import gsap from 'gsap'
 import { onMounted, onUnmounted } from 'vue'
 
-let elements: any
-
 onMounted(() => {
-  elements = document.querySelectorAll('.moveable-block')
-
   window.addEventListener('mousemove', (e) => {
     animateCircle(e)
   })

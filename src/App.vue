@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import LoadingScreen from './components/LoadingScreen.vue'
+import NotificationsWrapperVue from './components/NotificationsWrapper.vue'
 import { useLoadingStore } from './stores/global'
 import '@/styles/global.scss'
 
-const { loadingValue } = useLoadingStore()
+const loadingStore = useLoadingStore()
 </script>
 
 <template>
-  <LoadingScreen v-if="loadingValue" />
+  <LoadingScreen v-if="loadingStore.loadingValue" />
+
+  <NotificationsWrapperVue />
 
   <RouterView />
 </template>

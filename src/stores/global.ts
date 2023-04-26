@@ -1,17 +1,6 @@
-import type { User } from 'firebase/auth'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { CustomNotification } from '@/global'
-
-// export const useCounterStore = defineStore('counter', () => {
-//   const count = ref(0)
-//   const doubleCount = computed(() => count.value * 2)
-//   function increment() {
-//     count.value++
-//   }
-
-//   return { count, doubleCount, increment }
-// })
 
 export const useRoomIdStore = defineStore('useRoomIdStore', () => {
   const roomId = ref<string>()
@@ -24,7 +13,6 @@ export const useMessagesStore = defineStore('useMessagesStore', () => {
 
   const setRoomMessages = (messages: any[]) => {
     roomMessages.value = messages
-    console.log({ messages, roomMessages })
   }
 
   const resetRoomMessages = () => {
